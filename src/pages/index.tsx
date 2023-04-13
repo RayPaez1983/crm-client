@@ -44,6 +44,15 @@ const Home = () => {
       >
         Iniciar Sesion
       </div>
+       <div
+        onClick={() =>
+          router.push({
+            pathname: `/clients`,
+          })
+        }
+      >
+        Clientes
+      </div>
       {data?.getMenu.map((dish: any, idx: number) => {
         return (
           <div key={idx}>
