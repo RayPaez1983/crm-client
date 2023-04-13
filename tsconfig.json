@@ -19,6 +19,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "apollo-client.js", "src/pages/sign-in.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "apollo-client.js",
+    "src/pages/sign-in.tsx"
+  ],
   "exclude": ["node_modules"]
 }

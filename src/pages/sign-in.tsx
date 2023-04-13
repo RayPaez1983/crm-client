@@ -11,7 +11,7 @@ const AUTH_USER = gql`
   }
 `;
 
-function Login() {
+const Login = () => {
   const router = useRouter();
   const [authUser] = useMutation(AUTH_USER);
   return (
@@ -19,7 +19,9 @@ function Login() {
       <Formik
         initialValues={{ email: '', password: '' }}
         validate={(values) => {
-          const errors = {};
+          const errors = {
+            email: '',
+          };
           if (!values.email) {
             errors.email = 'Required';
           } else if (
@@ -87,6 +89,6 @@ function Login() {
       </Formik>
     </div>
   );
-}
+};
 
 export default Login;
