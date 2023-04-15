@@ -24,7 +24,8 @@
     "**/*.ts",
     "**/*.tsx",
     "apollo-client.js",
-    "src/pages/sign-in.tsx"
+    "src/pages/sign-in.jsx",
+    "src/pages/orders.jsx"
   ],
   "exclude": ["node_modules"]
 }

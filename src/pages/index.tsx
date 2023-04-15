@@ -1,25 +1,28 @@
 import { Inter } from '@next/font/google';
 import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
-const inter = Inter({ subsets: ['latin'] });
 
-const menuQuery = gql`
-  query GetMenu {
-    getMenu {
-      dishName
-      inStock
-      protein
-      vegetables
-      price
-      carbohydrates
-    }
+const CLIENT_USER_QUERY = gql`
+ query GetClientUser {
+  getClientUser {
+    phoneNumber
+    order
+    name
+    lastname
+    email
   }
+}
 `;
+
 
 const Home = () => {
   const router = useRouter();
-  const { data, loading, error } = useQuery(menuQuery);
-
+   const { data, loading, error } = useQuery(CLIENT_USER_QUERY);
+   const signOut = () => {
+    localStorage.removeItem('token');
+    router.push('/sign-in');
+  };
+console.log(data, 'data aqui')
   if (loading) {
     return <h1>Loading</h1>;
   }
@@ -53,20 +56,41 @@ const Home = () => {
       >
         Clientes
       </div>
-      {data?.getMenu.map((dish: any, idx: number) => {
+       <div
+        onClick={() =>
+          router.push({
+            pathname: `/newClient`,
+          })
+        }
+      >
+        Nuevo Clientes
+      </div>
+        <div
+        onClick={() =>
+          router.push({
+            pathname: `/orders`,
+          })
+        }
+      >
+        Ordenes
+      </div>
+       <div
+        onClick={signOut}
+      >
+        Cerrar Sesion
+      </div>
+      {/* {data?.getClientUser.map((user: any, idx: number) => {
         return (
           <div key={idx}>
-            <h1>{dish.dishName}</h1>
+            <h1>{`${user.name} ${user.lastname}`}</h1>
             <div>
-              <h4>{dish.protein}</h4>
-              <h4>{dish.carbohydrates}</h4>
-              <h4>{dish.vegetables}</h4>
-              <h3>{dish.price}</h3>
-              <h3>{dish.inStock}</h3>
+              <h4>{user.order}</h4>
+              <h4>{user.phoneNumber}</h4>
+              <h4>{user.email}</h4>
             </div>
           </div>
         );
-      })}
+      })} */}
       <div
         onClick={() =>
           router.push({
