@@ -56,6 +56,15 @@ console.log(data, 'data aqui')
       >
         Clientes
       </div>
+      <div
+        onClick={() =>
+          router.push({
+            pathname: `/users`,
+          })
+        }
+      >
+        Users
+      </div>
        <div
         onClick={() =>
           router.push({
@@ -79,18 +88,7 @@ console.log(data, 'data aqui')
       >
         Cerrar Sesion
       </div>
-      {/* {data?.getClientUser.map((user: any, idx: number) => {
-        return (
-          <div key={idx}>
-            <h1>{`${user.name} ${user.lastname}`}</h1>
-            <div>
-              <h4>{user.order}</h4>
-              <h4>{user.phoneNumber}</h4>
-              <h4>{user.email}</h4>
-            </div>
-          </div>
-        );
-      })} */}
+     
       <div
         onClick={() =>
           router.push({
