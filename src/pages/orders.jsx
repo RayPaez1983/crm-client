@@ -40,7 +40,7 @@ const Home = () => {
   if (loading) {
     return <h1>Loading</h1>;
   }
-  console.log(data, ' ladata barata');
+
   return (
     <>
       <div
