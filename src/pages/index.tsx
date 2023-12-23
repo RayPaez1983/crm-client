@@ -1,103 +1,39 @@
-import { Inter } from '@next/font/google';
-import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
+import { useAuth } from '@/context/sign-in.context';
+import { useToken } from '@/context/token.context';
 
-const CLIENT_USER_QUERY = gql`
- query GetClientUser {
-  getClientUser {
-    phoneNumber
-    order
-    name
-    lastname
-    email
+const GET_MENU_QUERY = gql`
+  query getMenu {
+    getMenu {
+      dishName
+      inStock
+      price
+    }
   }
-}
 `;
 
-
 const Home = () => {
-  const router = useRouter();
-   const { data, loading, error } = useQuery(CLIENT_USER_QUERY);
-   const signOut = () => {
-    localStorage.removeItem('token');
-    router.push('/sign-in');
-  };
-console.log(data, 'data aqui')
+  const { data, loading, error } = useQuery(GET_MENU_QUERY);
+  const { tokenState } = useToken();
+  console.log(tokenState.token, 'que paso otra vez', data);
+
   if (loading) {
     return <h1>Loading</h1>;
   }
 
   return (
     <>
-      <div
-        onClick={() =>
-          router.push({
-            pathname: `/sign-up`,
-          })
-        }
-      >
-        Registrarse
-      </div>
-       <div
-        onClick={() =>
-          router.push({
-            pathname: `/sign-in`,
-          })
-        }
-      >
-        Iniciar Sesion
-      </div>
-       <div
-        onClick={() =>
-          router.push({
-            pathname: `/clients`,
-          })
-        }
-      >
-        Clientes
-      </div>
-      <div
-        onClick={() =>
-          router.push({
-            pathname: `/users`,
-          })
-        }
-      >
-        Users
-      </div>
-       <div
-        onClick={() =>
-          router.push({
-            pathname: `/newClient`,
-          })
-        }
-      >
-        Nuevo Clientes
-      </div>
-        <div
-        onClick={() =>
-          router.push({
-            pathname: `/orders`,
-          })
-        }
-      >
-        Ordenes
-      </div>
-       <div
-        onClick={signOut}
-      >
-        Cerrar Sesion
-      </div>
-     
-      <div
-        onClick={() =>
-          router.push({
-            pathname: `/new-dish`,
-          })
-        }
-      >
-        Nuevo Plato
-      </div>
+      {data && tokenState.token ? (
+        data.getMenu.map((menu: any, key: number) => (
+          <ul key={key}>
+            <li>Nombre: {menu.dishName}</li>
+            <li>Cantidad: {menu.inStock}</li>
+            <li>Precio: {menu.price}</li>
+          </ul>
+        ))
+      ) : (
+        <div>Restaurant App</div>
+      )}
     </>
   );
 };

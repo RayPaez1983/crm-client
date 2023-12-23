@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
+import WrapperComponent from '../components/wrapper';
 
 const GET_USERS = gql`
   query GetUsers {
@@ -19,8 +20,7 @@ const DELETE_USER = gql`
   }
 `;
 
-const Home = () => {
-  const router = useRouter();
+const Users = () => {
   const { data, loading, error } = useQuery(GET_USERS);
   const [deleteUser] = useMutation(DELETE_USER);
 
@@ -57,15 +57,6 @@ const Home = () => {
   console.log(data, ' ladata barata');
   return (
     <>
-      <div
-        onClick={() =>
-          router.push({
-            pathname: `/`,
-          })
-        }
-      >
-        Home
-      </div>
       {data?.getUsers.map((user, idx) => {
         console.log(user.id);
         const date = new Date(Number(user.created));
@@ -86,4 +77,4 @@ const Home = () => {
     </>
   );
 };
-export default Home;
+export default Users;

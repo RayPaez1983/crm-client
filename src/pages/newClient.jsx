@@ -1,12 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Formik } from 'formik';
+import { Formik, Form } from 'formik';
 import { gql, useMutation } from '@apollo/client';
+import { fromStyles, fromWrapperStyles } from '@/components/styles';
+import CustomInput from '@/components/customInput';
 
 const NEW_CLIENT = gql`
   mutation Mutation($input: clientInput) {
     newClient(input: $input) {
-      waiter
       order
       phoneNumber
       name
@@ -29,7 +30,7 @@ const GET_CLIENTS = gql`
   }
 `;
 
-const SignUp = () => {
+const NewClient = () => {
   const router = useRouter();
   const [newClient] = useMutation(NEW_CLIENT, {
     update(cache, { data: { newClient } }) {
@@ -71,7 +72,6 @@ const SignUp = () => {
                 },
               },
             });
-            console.log(data, 'my data');
             if (data) {
               router.push({
                 pathname: `/clients`,
@@ -80,72 +80,45 @@ const SignUp = () => {
           } catch (error) {
             console.log(error);
           }
-        }}
-      >
+        }}>
         {({
-          values,
           errors,
           touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
+
           /* and other goodies */
         }) => (
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Nombre</label>
-            <input
-              type="name"
-              name="name"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.name}
-            />
-            {errors.name && touched.name && errors.name}
-            <label htmlFor="lastname">Apellido</label>
-            <input
-              type="lastname"
-              name="lastname"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.lastname}
-            />
-            {errors.lastname && touched.lastname && errors.lastname}
-            <label htmlFor="email">Correo Electronico</label>
-            <input
-              type="email"
-              name="email"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-            />
-            {errors.email && touched.email && errors.email}
-            <label htmlFor="phoneNumber">Telefono</label>
-            <input
-              type="phoneNumber"
-              name="phoneNumber"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.phoneNumber}
-            />
-            {errors.phoneNumber && touched.phoneNumber && errors.phoneNumber}
-            <label htmlFor="order">Orden</label>
-            <input
-              type="order"
-              name="order"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.order}
-            />
-            {errors.order && touched.order && errors.order}
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
-          </form>
+          <div style={fromWrapperStyles}>
+            <Form style={fromStyles}>
+              <h1>Nuevo Cliente</h1>
+              <CustomInput type="name" name="name" placeholder="Nombre" />
+              {errors.name && touched.name && errors.name}
+              <CustomInput
+                type="lastname"
+                name="lastname"
+                placeholder="Apellido"
+              />
+              {errors.lastname && touched.lastname && errors.lastname}
+              <CustomInput
+                type="email"
+                name="email"
+                placeholder="Correo Electronico"
+              />
+              {errors.email && touched.email && errors.email}
+              <CustomInput
+                type="phoneNumber"
+                name="phoneNumber"
+                placeholder="Telefono"
+              />
+              {errors.phoneNumber && touched.phoneNumber && errors.phoneNumber}
+              <CustomInput type="order" name="order" placeholder="Orden" />
+              {errors.order && touched.order && errors.order}
+              <button type="submit">Submit</button>
+            </Form>
+          </div>
         )}
       </Formik>
     </div>
   );
 };
 
-export default SignUp;
+export default NewClient;

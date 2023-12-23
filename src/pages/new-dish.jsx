@@ -54,7 +54,6 @@ const NewDish = () => {
                 },
               },
             });
-            console.log(data, 'my data');
             if (data) {
               router.push({
                 pathname: `/`,
