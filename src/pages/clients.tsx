@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
+import { Client } from 'types/types';
 
 const GET_CLIENTS = gql`
   query GetClients {
@@ -16,29 +17,35 @@ const GET_CLIENTS = gql`
   }
 `;
 const DELETE_CLIENT = gql`
-  mutation Mutation($deleteClientId: ID!) {
+  mutation DeleteClient($deleteClientId: ID!) {
     deleteClient(id: $deleteClientId)
   }
 `;
+
 
 const Home = () => {
   const router = useRouter();
   const { data, loading, error } = useQuery(GET_CLIENTS);
   const [deleteClient] = useMutation(DELETE_CLIENT, {
-    update(cache) {
+  update(cache, { data: { deleteClient: deletedClientId } }) {
+    try {
       const { getClients } = cache.readQuery({ query: GET_CLIENTS });
       cache.writeQuery({
         query: GET_CLIENTS,
         data: {
           getClients: getClients.filter(
-            (currentClient) => currentClient.id !== deleteClientId
+            (currentClient: Client) => currentClient.id !== deletedClientId
           ),
         },
       });
-    },
-  });
+    } catch (error) {
+      console.error("Error updating cache:", error);
+    }
+  },
+});
 
-  const deleteCurrentClient = async (id) => {
+
+  const deleteCurrentClient = async (id: string) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -68,19 +75,15 @@ const Home = () => {
   if (loading) {
     return <h1>Loading</h1>;
   }
-  console.log(data, ' ladata barata');
+
+  const sortedClients = data.getClients
+    .slice()
+    .sort((a: any, b: any) => {console.log(a); return b.created - a.created});
+
+  console.log(sortedClients, ' ladata barata');
   return (
     <>
-      <div
-        onClick={() =>
-          router.push({
-            pathname: `/`,
-          })
-        }
-      >
-        Home
-      </div>
-      {data?.getClients.map((client, idx) => {
+      {sortedClients.map((client: Client, idx: number) => {
         const date = new Date(Number(client.created));
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
