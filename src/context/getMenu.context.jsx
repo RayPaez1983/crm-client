@@ -1,5 +1,20 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useAuth } from '@/context/sign-in.context';
+import { useQuery, gql } from '@apollo/client';
+
+const GET_MENU_QUERY = gql`
+  query getMenu {
+    getMenu {
+      id
+      dishName
+      protein
+      carbohydrates
+      vegetables
+      inStock
+      price
+    }
+  }
+`;
 
 const MenuData = createContext();
 
@@ -8,35 +23,34 @@ export const useMenuData = () => {
 };
 
 const initialState = {
-  token: '',
+  data: [],
 };
 
-const tokenReducer = (state, action) => {
+const menuDataReducer = (state, action) => {
+  console.log(action);
   switch (action.type) {
-    case 'TOKEN_REQUEST':
-      return { ...state, token: action.token };
+    case 'DATA_MENU_REQUEST':
+      return { ...state, data: action.data?.getMenu };
 
     default:
       return state;
   }
 };
 
-export const TokenProvider = ({ children }) => {
-  const { authState } = useAuth();
-  const [tokenState, dispatch] = useReducer(tokenReducer, initialState);
-
+export const MenuDataProvider = ({ children }) => {
+  const { data, loading, error } = useQuery(GET_MENU_QUERY);
+  const [menuDataState, dispatch] = useReducer(menuDataReducer, initialState);
+  console.log(data, 'que trae');
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      dispatch({
-        type: 'TOKEN_REQUEST',
-        token: window.localStorage.getItem('token'),
-      });
-    }
-  }, [authState.dataLogin.token]);
+    dispatch({
+      type: 'DATA_MENU_REQUEST',
+      data,
+    });
+  }, [data]);
 
-  console.log(tokenState, 'que putas opasa');
+  console.log(menuDataState, 'que putas opasa');
   return (
-    <MenuData.Provider value={{ tokenState, dispatch }}>
+    <MenuData.Provider value={{ menuDataState, dispatch }}>
       {children}
     </MenuData.Provider>
   );

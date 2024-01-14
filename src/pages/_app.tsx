@@ -5,6 +5,7 @@ import {NewUserProvider} from "../context/sign-up.context"
 import {TokenProvider} from "../context/token.context"
 import WrapperComponent from "@/components/wrapper";
 import '../styles/global.css'
+import { MenuDataProvider } from "@/context/getMenu.context";
 
 const MyApp = ({ Component, pageProps }: any) => {
   return (
@@ -12,9 +13,11 @@ const MyApp = ({ Component, pageProps }: any) => {
       <AuthProvider>
         <NewUserProvider>
           <TokenProvider>
+          <MenuDataProvider>
           <WrapperComponent>
             <Component {...pageProps} />
           </WrapperComponent>
+          </MenuDataProvider>
           </TokenProvider>
         </NewUserProvider>
       </AuthProvider>
