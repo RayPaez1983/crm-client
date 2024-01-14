@@ -27,21 +27,21 @@ const Home = () => {
   const router = useRouter();
   const { data, loading, error } = useQuery(GET_CLIENTS);
   const [deleteClient] = useMutation(DELETE_CLIENT, {
-  update(cache, { data: { deleteClient: deletedClientId } }) {
-    try {
-      const { getClients } = cache.readQuery({ query: GET_CLIENTS });
-      cache.writeQuery({
-        query: GET_CLIENTS,
-        data: {
-          getClients: getClients.filter(
-            (currentClient: Client) => currentClient.id !== deletedClientId
-          ),
-        },
-      });
-    } catch (error) {
-      console.error("Error updating cache:", error);
-    }
-  },
+update(cache, { data: { deleteClient: deleteClientId } }) {
+  try {
+    const { getClients } = cache.readQuery({ query: GET_CLIENTS });
+    cache.writeQuery({
+      query: GET_CLIENTS,
+      data: {
+        getClients: getClients.filter(
+          (currentClient: Client) => currentClient.id !== deleteClientId
+        ),
+      },
+    });
+  } catch (error) {
+    console.error("Error updating cache:", error);
+  }
+},
 });
 
 
@@ -55,19 +55,19 @@ const Home = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
     }).then(async (result) => {
+      console.log(result, 'si hay result')
       if (result.value) {
-        try {
+       try {
           const { data } = await deleteClient({
             variables: {
               deleteClientId: id,
             },
           });
-          console.log(data.deleteClient);
+          console.log(data);
+          Swal.fire('Deleted!', data.deleteClient, 'success');
         } catch (error) {
           console.log(error);
         }
-        console.log(id);
-        Swal.fire('Deleted!', data.deleteClient, 'success');
       }
     });
     console.log(data, 'dlete client');
@@ -80,7 +80,7 @@ const Home = () => {
     .slice()
     .sort((a: any, b: any) => {console.log(a); return b.created - a.created});
 
-  console.log(sortedClients, ' ladata barata');
+  console.log(sortedClients, ' ladata barata', data);
   return (
     <>
       {sortedClients.map((client: Client, idx: number) => {

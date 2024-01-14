@@ -16,33 +16,11 @@ const NEW_CLIENT = gql`
     }
   }
 `;
-const GET_CLIENTS = gql`
-  query GetClients {
-    getClients {
-      phoneNumber
-      order
-      name
-      lastname
-      id
-      email
-      created
-    }
-  }
-`;
+
 
 const NewClient = () => {
   const router = useRouter();
-  const [newClient] = useMutation(NEW_CLIENT, {
-    update(cache, { data: { newClient } }) {
-      const { getClients } = cache.readQuery({ query: GET_CLIENTS });
-      cache.writeQuery({
-        query: GET_CLIENTS,
-        data: {
-          getClients: [...getClients, newClient],
-        },
-      });
-    },
-  });
+  const [newClient] = useMutation(NEW_CLIENT);
   return (
     <div>
       <Formik

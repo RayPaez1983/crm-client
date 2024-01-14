@@ -11,7 +11,7 @@ interface InputProps {
 }
 
 const CustomInput = ({ name, type, placeholder }: InputProps) => {
-  console.log(name, type, 'custom form values');
+
   return (
     <>
       <Field style={inputStyles} type={type} name={name} placeholder={placeholder} />

@@ -22,17 +22,12 @@ const GET_ORDERS = gql`
   }
 `;
 
-const GET_DISH = gql`
-  query Query($getDishId: ID!) {
-    getDish(id: $getDishId) {
-      vegetables
-      protein
-      price
-      inStock
+const GET_MENU = gql`
+  query GetMenu {
+    getMenu {
       id
+      inStock
       dishName
-      created
-      carbohydrates
     }
   }
 `;
@@ -69,34 +64,31 @@ const Home = () => {
     skip: !clientId, // Skip the query if dishId is not set
   });
   const {
-    data: dishData,
+    data: menuData,
     loading: dishLoading,
     error: dishError,
-  } = useQuery(GET_DISH, {
-    variables: { getDishId: dishId },
-    skip: !dishId, // Skip the query if dishId is not set
-  });
+  } = useQuery(GET_MENU);
 
   useEffect(() => {
-    console.log(ordersData, 'que pasaqui mi brotheeer');
+    console.log(ordersData, 'que pasaqui mi brotheeer', menuData);
     // Use useEffect to set dishId after the component has rendered
-    ordersData?.getOrders.forEach((order) => {
+    ordersData?.getOrders.map((order) => {
+      console.log(order.order, 'is more than welcome', order);
       setClientId(order.client);
-      order.order.forEach((item) => {
+      order.order?.map((item) => {
+        menuData?.getMenu.map((dish) => {
+          console.log(dish, item, order, 'no viene');
+        });
         setDishId(item.id);
+        console.log(clientData, 'no viene');
       });
     });
-  }, [ordersData]); // Run the effect when ordersData changes
+  }, [ordersData, clientData]); // Run the effect when ordersData changes
 
   if (ordersLoading) {
     return <h1>Loading</h1>;
   }
-  console.log(
-    clientData?.getClient.name,
-    'dura la vuelta',
-    ordersData.getOrders,
-    dishData?.getDish
-  );
+
   return (
     <>
       {ordersData?.getOrders.map((order, idx) => {
@@ -112,15 +104,9 @@ const Home = () => {
               <h4>{order.total}</h4>
               <h3>{`${month}-${day}-${year}`}</h3>
 
-              {/* Fetch and display dish information */}
+              {order.order.map((item) => item.id)}
 
-              {dishData?.getDish && (
-                <div>
-                  <h2>{dishData.getDish.dishName}</h2>
-                  {/* Add more dish information as needed */}
-                </div>
-              )}
-              <div>{clientData?.getClient.name}</div>
+              <div>{order.client}</div>
             </div>
           </div>
         );

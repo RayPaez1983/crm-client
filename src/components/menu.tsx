@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../context/sign-in.context';
 import { useToken } from '@/context/token.context';
 
- interface MenuProps {
+interface MenuProps {
   dataMenu: Array<{ pathName: string; title: string }>;
-
 }
 
 export const Menu = ({ dataMenu }: MenuProps) => {
@@ -23,8 +22,8 @@ export const Menu = ({ dataMenu }: MenuProps) => {
   };
   const router = useRouter();
   const { handleLogout } = useAuth();
- const {tokenState} = useToken()
-console.log(tokenState.token, 'que paso otra vez')
+  const { tokenState } = useToken();
+
   const signOut = () => {
     handleLogout();
   };
@@ -38,8 +37,7 @@ console.log(tokenState.token, 'que paso otra vez')
             router.push({
               pathname: item.pathName,
             })
-          }
-        >
+          }>
           {item.title}
         </div>
       ))}
