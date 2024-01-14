@@ -27,7 +27,9 @@
     "src/pages/sign-in.tsx",
     "src/pages/orders.jsx",
     "src/pages/clients.tsx",
-    "src/pages/new-dish.jsx"
+    "src/pages/new-dish.jsx",
+    "src/pages/newClient.tsx",
+    "src/pages/newClient.tsx"
   ],
   "exclude": ["node_modules"]
 }

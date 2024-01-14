@@ -14,7 +14,6 @@ interface LoginValues {
 const Login = ({email, password}: LoginValues) => {
   const router = useRouter();
   const { handleLogin, authState } = useAuth();
- console.log(authState.error,'que esto bro', password ? password : 'required')
 
   return (
     <>      

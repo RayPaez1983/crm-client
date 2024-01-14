@@ -2,6 +2,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Menu } from './menu';
 import { useAuth } from '@/context/sign-in.context';
+import { useRouter } from 'next/router';
 import { logOutMenu, dataMenu } from '../localData/Menu';
 
 interface ParentProps {
@@ -10,6 +11,7 @@ interface ParentProps {
 
 const WrapperComponent: React.FC<ParentProps> = ({ children }) => {
   const [token, setToken] = useState<String>('');
+  const router = useRouter();
   const { authState } = useAuth();
   const wrapperStyles: React.CSSProperties = {
     backgroundColor: '#44c3c3',
@@ -22,14 +24,13 @@ const WrapperComponent: React.FC<ParentProps> = ({ children }) => {
     }
   }, [authState.dataLogin.token]);
 
-  console.log(token, 'Running on the server', authState.dataLogin.token);
+  const isSignInPage = router.pathname === '/sign-in';
+
+  console.log(isSignInPage);
 
   return (
     <>
-      <Menu
-        dataMenu={token ? dataMenu : logOutMenu}
-       
-      />
+      <Menu dataMenu={!isSignInPage && token ? dataMenu : logOutMenu} />
       <div style={wrapperStyles}>{children}</div>
     </>
   );

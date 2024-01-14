@@ -1,7 +1,9 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Formik } from 'formik';
+import { Formik, Form } from 'formik';
 import { gql, useMutation } from '@apollo/client';
+import { fromStyles, fromWrapperStyles } from '@/components/styles';
+import CustomInput from '@/components/customInput';
 
 const NEW_DISH = gql`
   mutation newDish($input: dishInput) {
@@ -62,79 +64,54 @@ const NewDish = () => {
           } catch (error) {
             console.log(error);
           }
-        }}
-      >
+        }}>
         {({
-          values,
           errors,
           touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
           /* and other goodies */
         }) => (
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="dishName">Nombre del plato</label>
-            <input
-              type="dishName"
-              name="dishName"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.dishName}
-            />
-            {errors.name && touched.name && errors.name}
-            <label htmlFor="protein">Proteina</label>
-            <input
-              type="protein"
-              name="protein"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.protein}
-            />
-            {errors.protein && touched.protein && errors.protein}
-            <label htmlFor="carbohydrates">Carbohidratos</label>
-            <input
-              type="carbohydrates"
-              name="carbohydrates"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.carbohydrates}
-            />
-            {errors.carbohydrates &&
-              touched.carbohydrates &&
-              errors.carbohydrates}
-            <label htmlFor="vegetables">Vegetales</label>
-            <input
-              type="vegetables"
-              name="vegetables"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.vegetables}
-            />
-            {errors.vegetables && touched.vegetables && errors.vegetables}
-            <label htmlFor="price">Precio</label>
-            <input
-              type="number"
-              name="price"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.price}
-            />
-            {errors.price && touched.price && errors.price}
-            <label htmlFor="inStock">En stock</label>
-            <input
-              type="number"
-              name="inStock"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.inStock}
-            />
-            {errors.inStock && touched.inStock && errors.inStock}
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
-          </form>
+          <div style={fromWrapperStyles}>
+            <Form style={fromStyles}>
+              <label htmlFor="dishName">Nombre del plato</label>
+              <CustomInput
+                type="text"
+                name="dishName"
+                placeholder="Nombre del plato"
+              />
+              {errors.dishName && touched.dishName && errors.dishName}
+              <label htmlFor="protein">Proteina</label>
+              <CustomInput type="text" name="protein" placeholder="Proteina" />
+              {errors.protein && touched.protein && errors.protein}
+              <label htmlFor="carbohydrates">Carbohidratos</label>
+              <CustomInput
+                type="text"
+                name="carbohydrates"
+                placeholder="carbohidratos"
+              />
+              {errors.carbohydrates &&
+                touched.carbohydrates &&
+                errors.carbohydrates}
+              <label htmlFor="vegetables">Vegetales</label>
+              <CustomInput
+                type="text"
+                name="vegetables"
+                placeholder="Vegetales"
+              />
+              {errors.vegetables && touched.vegetables && errors.vegetables}
+              <label htmlFor="price">Precio</label>
+              <CustomInput type="number" name="price" placeholder="Precio" />
+
+              {errors.price && touched.price && errors.price}
+              <label htmlFor="inStock">En stock</label>
+              <CustomInput
+                type="number"
+                name="inStock"
+                placeholder="En bodega"
+              />
+              {errors.inStock && touched.inStock && errors.inStock}
+              <button type="submit">Submit</button>
+            </Form>
+          </div>
         )}
       </Formik>
     </div>
