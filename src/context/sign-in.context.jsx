@@ -87,7 +87,6 @@ export const AuthProvider = ({ children }) => {
       pathname: `/sign-in`,
     });
   };
-  console.log(authState, 'que putas opasa');
   return (
     <AuthContext.Provider
       value={{ authState, dispatch, handleLogin, handleLogout }}>

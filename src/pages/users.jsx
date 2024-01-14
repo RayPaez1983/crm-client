@@ -41,24 +41,19 @@ const Users = () => {
               deleteUserId: id,
             },
           });
-          console.log(data.deleteUser);
         } catch (error) {
           console.log(error);
         }
-        console.log(id);
         Swal.fire('Deleted!', data.deleteUser, 'success');
       }
     });
-    console.log(data, 'delete client');
   };
   if (loading) {
     return <h1>Loading</h1>;
   }
-  console.log(data, ' ladata barata');
   return (
     <>
       {data?.getUsers.map((user, idx) => {
-        console.log(user.id);
         const date = new Date(Number(user.created));
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2);

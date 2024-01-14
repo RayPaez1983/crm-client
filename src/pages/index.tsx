@@ -26,16 +26,11 @@ const Home = () => {
   if (loading) {
     return <h1>Loading</h1>;
   }
-
+console.log(data.getMenu)
   return (
-  <>
+    <>
       {data && tokenState.token ? (
-      
-         <Card data={data.getMenu}/>
-       
-       
-       
-        
+        <Card data={data.getMenu} />
       ) : (
         <div>Restaurant App</div>
       )}

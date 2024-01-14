@@ -22,28 +22,26 @@ const DELETE_CLIENT = gql`
   }
 `;
 
-
 const Home = () => {
   const router = useRouter();
   const { data, loading, error } = useQuery(GET_CLIENTS);
   const [deleteClient] = useMutation(DELETE_CLIENT, {
-update(cache, { data: { deleteClient: deleteClientId } }) {
-  try {
-    const { getClients } = cache.readQuery({ query: GET_CLIENTS });
-    cache.writeQuery({
-      query: GET_CLIENTS,
-      data: {
-        getClients: getClients.filter(
-          (currentClient: Client) => currentClient.id !== deleteClientId
-        ),
-      },
-    });
-  } catch (error) {
-    console.error("Error updating cache:", error);
-  }
-},
-});
-
+    update(cache, { data: { deleteClient: deleteClientId } }) {
+      try {
+        const { getClients } = cache.readQuery({ query: GET_CLIENTS });
+        cache.writeQuery({
+          query: GET_CLIENTS,
+          data: {
+            getClients: getClients.filter(
+              (currentClient: Client) => currentClient.id !== deleteClientId
+            ),
+          },
+        });
+      } catch (error) {
+        console.error('Error updating cache:', error);
+      }
+    },
+  });
 
   const deleteCurrentClient = async (id: string) => {
     Swal.fire({
@@ -55,22 +53,19 @@ update(cache, { data: { deleteClient: deleteClientId } }) {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
     }).then(async (result) => {
-      console.log(result, 'si hay result')
       if (result.value) {
-       try {
+        try {
           const { data } = await deleteClient({
             variables: {
               deleteClientId: id,
             },
           });
-          console.log(data);
           Swal.fire('Deleted!', data.deleteClient, 'success');
         } catch (error) {
           console.log(error);
         }
       }
     });
-    console.log(data, 'dlete client');
   };
   if (loading) {
     return <h1>Loading</h1>;
@@ -78,9 +73,8 @@ update(cache, { data: { deleteClient: deleteClientId } }) {
 
   const sortedClients = data.getClients
     .slice()
-    .sort((a: any, b: any) => {console.log(a); return b.created - a.created});
+    .sort((a: any, b: any) => b.created - a.created);
 
-  console.log(sortedClients, ' ladata barata', data);
   return (
     <>
       {sortedClients.map((client: Client, idx: number) => {

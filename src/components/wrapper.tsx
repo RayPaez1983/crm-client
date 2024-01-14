@@ -26,8 +26,6 @@ const WrapperComponent: React.FC<ParentProps> = ({ children }) => {
 
   const isSignInPage = router.pathname === '/sign-in';
 
-  console.log(isSignInPage);
-
   return (
     <>
       <Menu dataMenu={!isSignInPage && token ? dataMenu : logOutMenu} />

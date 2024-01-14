@@ -75,7 +75,6 @@ export const NewUserProvider = ({ children }) => {
           pathname: `/sign-in`,
         });
       }
-      console.log(data, newUserState, 'new users');
       dispatch({ type: 'SIGN_UP_SUCCESS', dataSignUp: data.newUser });
     } catch (error) {
       dispatch({ type: 'SIGN_UP_ERROR', error: error.message });

@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useAuth } from '@/context/sign-in.context';
 
-const TokenContext = createContext();
+const MenuData = createContext();
 
-export const useToken = () => {
-  return useContext(TokenContext);
+export const useMenuData = () => {
+  return useContext(MenuData);
 };
 
 const initialState = {
@@ -34,10 +34,10 @@ export const TokenProvider = ({ children }) => {
     }
   }, [authState.dataLogin.token]);
 
-
+  console.log(tokenState, 'que putas opasa');
   return (
-    <TokenContext.Provider value={{ tokenState, dispatch }}>
+    <MenuData.Provider value={{ tokenState, dispatch }}>
       {children}
-    </TokenContext.Provider>
+    </MenuData.Provider>
   );
 };

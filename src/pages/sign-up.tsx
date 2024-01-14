@@ -16,13 +16,11 @@ const SignUp: React.FC = () => {
   const router = useRouter();
 
   const { handleSignUp, newUserState } = newUser();
-console.log(Object.keys(newUserState.dataSignUp).length, 'callar')
   return (
 
       <Formik
         initialValues={{ name: '', lastName: '', email: '', password: '' }}
         validate={(values: SignUpValues) => {
-          console.log(values, 'qie es esto mami')
           const errors: Partial<SignUpValues> = {};
            if (!values.name) {
             errors.name = 'Required';
