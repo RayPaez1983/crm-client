@@ -37,7 +37,6 @@ const Card = ({ data }: CardProp) => {
 
 const renderItem = (item: any) => {
   if (typeof item === 'object') {
-    console.log(Object.entries(item));
     return Object.entries(item).map(([key, value]) => (
       <div key={key} className="item-property">
         <strong>{key}:</strong> {renderValue(value)}

@@ -1,8 +1,6 @@
 import { useQuery, gql } from '@apollo/client';
-import { useAuth } from '@/context/sign-in.context';
 import { useToken } from '@/context/token.context';
-import { Menu } from 'types/types';
-import { useEffect } from 'react';
+import { useMenuData} from '@/context/getMenu.context'
 import Card from '@/components/card';
 
 const GET_MENU_QUERY = gql`
@@ -22,15 +20,20 @@ const GET_MENU_QUERY = gql`
 const Home = () => {
   const { data, loading, error } = useQuery(GET_MENU_QUERY);
   const { tokenState } = useToken();
+  const { menuDataState } = useMenuData()
+  console.log(menuDataState.data
+    , 'que jue')
 
   if (loading) {
     return <h1>Loading</h1>;
   }
-console.log(data.getMenu)
+
   return (
     <>
-      {data && tokenState.token ? (
-        <Card data={data.getMenu} />
+      {menuDataState.data && tokenState.token ? (
+        
+        <Card data={menuDataState.data} />
+       
       ) : (
         <div>Restaurant App</div>
       )}
