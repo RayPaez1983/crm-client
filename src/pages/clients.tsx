@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
 import { Client } from 'types/types';
+import Card from '@/components/card';
 
 const GET_CLIENTS = gql`
   query GetClients {
@@ -77,6 +78,7 @@ const Home = () => {
 
   return (
     <>
+      <Card data={sortedClients} />
       {sortedClients.map((client: Client, idx: number) => {
         const date = new Date(Number(client.created));
         const year = date.getFullYear();
