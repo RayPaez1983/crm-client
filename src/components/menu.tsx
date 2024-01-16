@@ -2,27 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/sign-in.context';
 import { useToken } from '@/context/token.context';
+import { menuStyles } from './styles';
 
 interface MenuProps {
   dataMenu: Array<{ pathName: string; title: string }>;
 }
 
 export const Menu = ({ dataMenu }: MenuProps) => {
-  const menuStyles: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'row', // Valid value for flex direction
-    gap: '10px',
-    backgroundColor: '#3a3af1',
-    color: 'white',
-    padding: '10px',
-    cursor: 'pointer',
-    position: 'fixed',
-    top: '0',
-    width: '100%',
-  };
   const router = useRouter();
   const { handleLogout } = useAuth();
   const { tokenState } = useToken();
+
+  const isSignInPage = router.pathname === '/sign-in';
 
   const signOut = () => {
     handleLogout();
@@ -41,7 +32,7 @@ export const Menu = ({ dataMenu }: MenuProps) => {
           {item.title}
         </div>
       ))}
-      {tokenState.token ? <div onClick={signOut}>Cerrar Sesion</div> : null}
+      {!isSignInPage && tokenState.token ? <div onClick={signOut}>Cerrar Sesion</div> : null}
     </div>
   );
 };
