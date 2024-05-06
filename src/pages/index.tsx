@@ -1,43 +1,27 @@
-import { useQuery, gql } from '@apollo/client';
+import { cardStyles, cardWrapperStyles } from '@/components/styles';
 import { useToken } from '@/context/token.context';
-import { useMenuData} from '@/context/getMenu.context'
+import { useMenuData } from '@/context/getMenu.context';
+import { Menu } from '../../types/types';
 import Card from '@/components/card';
 
-const GET_MENU_QUERY = gql`
-  query getMenu {
-    getMenu {
-      id
-      dishName
-      protein
-      carbohydrates
-      vegetables
-      inStock
-      price
-    }
-  }
-`;
-
 const Home = () => {
-  const { data, loading, error } = useQuery(GET_MENU_QUERY);
   const { tokenState } = useToken();
-  const { menuDataState } = useMenuData()
-  console.log(menuDataState.data
-    , 'que jue')
+  const { menuDataState } = useMenuData();
 
-  if (loading) {
+  if (menuDataState.loading) {
     return <h1>Loading</h1>;
   }
 
   return (
-    <>
+    <div style={cardWrapperStyles}>
       {menuDataState.data && tokenState.token ? (
-        
-        <Card data={menuDataState.data} />
-       
+        menuDataState.data.map((dish: Menu, idx: number) => (
+          <Card item={dish} key={idx} OnClick={() => console.log(dish, idx)} />
+        ))
       ) : (
         <div>Restaurant App</div>
       )}
-    </>
+    </div>
   );
 };
 export default Home;

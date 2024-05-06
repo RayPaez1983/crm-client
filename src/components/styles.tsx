@@ -45,19 +45,18 @@ export const fromStyles: React.CSSProperties = {
   export const cardStyles: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 10,
-    padding: '5px',
-    border: '1px red solid',
-    margin: '10px',
+    justifyContent: ' space-evenly',
+    gap: 5,
+    padding: '16px',
+    boxShadow: ' -1px 2px 22px -5px rgba(235,159,173,1)',
     borderRadius: '5px',
-    width: 'fit-content',
-    minWidth: 240,
-    minHeight: 150,
-  }
+    backgroundColor: '#f4fafc',
+    width: '100%',
+    height: '100%',
+  };
 
-  export const cardWrapperStyles: React.CSSProperties ={
-    padding: '40px 0px',
+  export const cardWrapperStyles: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
     gap: '10px',
-  }
+  };

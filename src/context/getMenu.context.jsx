@@ -24,6 +24,7 @@ export const useMenuData = () => {
 
 const initialState = {
   data: [],
+  loading: true,
 };
 
 const menuDataReducer = (state, action) => {
@@ -31,7 +32,8 @@ const menuDataReducer = (state, action) => {
   switch (action.type) {
     case 'DATA_MENU_REQUEST':
       return { ...state, data: action.data?.getMenu };
-
+    case 'DATA_MENU_LOADING':
+      return { ...state, loading: action.loading };
     default:
       return state;
   }
@@ -40,13 +42,17 @@ const menuDataReducer = (state, action) => {
 export const MenuDataProvider = ({ children }) => {
   const { data, loading, error } = useQuery(GET_MENU_QUERY);
   const [menuDataState, dispatch] = useReducer(menuDataReducer, initialState);
-  console.log(data, 'que trae');
+  console.log(data, 'que trae', loading);
   useEffect(() => {
     dispatch({
       type: 'DATA_MENU_REQUEST',
       data,
     });
-  }, [data]);
+    dispatch({
+      type: 'DATA_MENU_LOADING',
+      loading,
+    });
+  }, [data, loading]);
 
   console.log(menuDataState, 'que putas opasa');
   return (
