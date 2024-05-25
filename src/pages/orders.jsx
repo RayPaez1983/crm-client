@@ -1,9 +1,9 @@
-import { Inter } from '@next/font/google';
 import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
+import { cardWrapperStyles } from '@/components/styles';
 import { useState, useEffect } from 'react';
-
-const inter = Inter({ subsets: ['latin'] });
+import { useOrderData } from '@/context/orders.context';
+import Card from '@/components/card';
 
 const GET_ORDERS = gql`
   query GetOrders {
@@ -44,11 +44,12 @@ const GET_CLIENT = gql`
   }
 `;
 
-const Home = () => {
+const Orders = () => {
   const router = useRouter();
+  const { orderDataState, loading } = useOrderData();
   const [dishId, setDishId] = useState('');
   const [clientId, setClientId] = useState('');
-
+  console.log(orderDataState.data, 'mala');
   const {
     data: ordersData,
     loading: ordersLoading,
@@ -90,29 +91,20 @@ const Home = () => {
   }
 
   return (
-    <>
-      {ordersData?.getOrders.map((order, idx) => {
-        const date = new Date(Number(order.created));
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-
+    <div style={cardWrapperStyles}>
+      {orderDataState.data?.map((order, idx) => {
         return (
-          <div key={idx}>
-            <div>
-              <h4>{order.state}</h4>
-              <h4>{order.total}</h4>
-              <h3>{`${month}-${day}-${year}`}</h3>
-
-              {order.order.map((item) => item.id)}
-
-              <div>{order.client}</div>
-            </div>
-          </div>
+          <Card
+            item={order}
+            cardButton
+            butonText="Eliminar"
+            key={idx}
+            OnClick={() => deleteCurrentUser(user.id)}
+          />
         );
       })}
-    </>
+    </div>
   );
 };
 
-export default Home;
+export default Orders;

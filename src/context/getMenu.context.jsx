@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { useAuth } from '@/context/sign-in.context';
 import { useQuery, gql } from '@apollo/client';
 
 const GET_MENU_QUERY = gql`
@@ -28,7 +27,6 @@ const initialState = {
 };
 
 const menuDataReducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
     case 'DATA_MENU_REQUEST':
       return { ...state, data: action.data?.getMenu };
@@ -40,9 +38,9 @@ const menuDataReducer = (state, action) => {
 };
 
 export const MenuDataProvider = ({ children }) => {
-  const { data, loading, error } = useQuery(GET_MENU_QUERY);
+  const { data, loading } = useQuery(GET_MENU_QUERY);
   const [menuDataState, dispatch] = useReducer(menuDataReducer, initialState);
-  console.log(data, 'que trae', loading);
+
   useEffect(() => {
     dispatch({
       type: 'DATA_MENU_REQUEST',
@@ -54,7 +52,6 @@ export const MenuDataProvider = ({ children }) => {
     });
   }, [data, loading]);
 
-  console.log(menuDataState, 'que putas opasa');
   return (
     <MenuData.Provider value={{ menuDataState, dispatch }}>
       {children}

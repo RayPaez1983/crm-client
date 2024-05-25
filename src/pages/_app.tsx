@@ -6,6 +6,7 @@ import {TokenProvider} from "../context/token.context"
 import WrapperComponent from "@/components/wrapper";
 import '../styles/global.css'
 import { MenuDataProvider } from "@/context/getMenu.context";
+import { OrderDataProvider } from '@/context/orders.context';
 
 const MyApp = ({ Component, pageProps }: any) => {
   return (
@@ -13,16 +14,18 @@ const MyApp = ({ Component, pageProps }: any) => {
       <AuthProvider>
         <NewUserProvider>
           <TokenProvider>
-          <MenuDataProvider>
-          <WrapperComponent>
-            <Component {...pageProps} />
-          </WrapperComponent>
-          </MenuDataProvider>
+            <MenuDataProvider>
+              <OrderDataProvider>
+                <WrapperComponent>
+                  <Component {...pageProps} />
+                </WrapperComponent>
+              </OrderDataProvider>
+            </MenuDataProvider>
           </TokenProvider>
         </NewUserProvider>
       </AuthProvider>
     </ApolloProvider>
   );
-}
+};
 
 export default MyApp
