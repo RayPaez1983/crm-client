@@ -17,6 +17,7 @@ const Home = () => {
       {menuDataState.data && tokenState.token ? (
         menuDataState.data.map((dish: Menu, idx: number) => (
           <Card
+            index={idx}
             item={dish}
             key={idx}
             OnClickDelete={() => console.log(dish, idx)}

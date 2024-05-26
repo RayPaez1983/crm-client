@@ -3,7 +3,7 @@ import { useOrderData } from '@/context/orders.context';
 import Card from '@/components/card';
 
 const Orders = () => {
-  const { orderDataState, loading } = useOrderData();
+  const { orderDataState, deleteSingleOrder, loading } = useOrderData();
 
   if (loading) {
     return <h1>Loading</h1>;
@@ -14,11 +14,12 @@ const Orders = () => {
       {orderDataState.data?.map((order, idx) => {
         return (
           <Card
+            index={idx}
             item={order}
             deleteButton
             butonText="Eliminar"
             key={idx}
-            OnClickDelete={() => alert(order.id)}
+            OnClickDelete={() => deleteSingleOrder(order.id)}
           />
         );
       })}

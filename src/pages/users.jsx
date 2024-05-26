@@ -50,7 +50,6 @@ const Users = () => {
               deleteUserId: id,
             },
           });
-          console.log(users, data, 'que es', data?.getUsers);
         } catch (error) {
           console.log(error);
         }
@@ -66,6 +65,7 @@ const Users = () => {
       {data?.getUsers.map((user, idx) => {
         return (
           <Card
+            index={idx}
             item={user}
             deleteButton
             butonText="Eliminar"

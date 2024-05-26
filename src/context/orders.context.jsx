@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { useMutation, useQuery, gql } from '@apollo/client';
 
 const GET_ORDERS_QUERY = gql`
   query GetOrders {
@@ -18,16 +18,9 @@ const GET_ORDERS_QUERY = gql`
   }
 `;
 
-const GET_CLIENT = gql`
-  query GetClient($getClientId: ID!) {
-    getClient(id: $getClientId) {
-      phoneNumber
-      order
-      name
-      lastname
-      email
-      id
-    }
+const DELETE_ORDER = gql`
+  mutation DeleteOrder($deleteOrderId: ID!) {
+    deleteOrder(id: $deleteOrderId)
   }
 `;
 
@@ -43,7 +36,7 @@ const initialState = {
 };
 
 const orderDataReducer = (state, action) => {
-  console.log(action);
+  console.log(state, action);
   switch (action.type) {
     case 'DATA_ORDER_REQUEST':
       return { ...state, data: action.data?.getOrders };
@@ -56,6 +49,9 @@ const orderDataReducer = (state, action) => {
 
 export const OrderDataProvider = ({ children }) => {
   const { data, loading, error } = useQuery(GET_ORDERS_QUERY);
+  const [deleteOrder] = useMutation(DELETE_ORDER, {
+    refetchQueries: [{ query: GET_ORDERS_QUERY }],
+  });
   const [orderDataState, dispatch] = useReducer(orderDataReducer, initialState);
   useEffect(() => {
     dispatch({
@@ -68,8 +64,12 @@ export const OrderDataProvider = ({ children }) => {
     });
   }, [data, loading]);
 
+  const deleteSingleOrder = async (id) => {
+    await deleteOrder({ variables: { deleteOrderId: id } });
+  };
+
   return (
-    <OrderData.Provider value={{ orderDataState, dispatch }}>
+    <OrderData.Provider value={{ orderDataState, dispatch, deleteSingleOrder }}>
       {children}
     </OrderData.Provider>
   );

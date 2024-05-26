@@ -66,6 +66,7 @@ const Home = () => {
       {sortedClients.map((client: Client, idx: number) => {
         return (
           <Card
+            index={idx}
             key={idx}
             item={client}
             deleteButton
