@@ -4,23 +4,39 @@ import { cardStyles } from './styles';
 
 interface CardProp {
   item: any;
-  cardButton?: Boolean;
+  deleteButton?: Boolean;
+  OnClickDelete?: () => void;
   OnClick?: () => void;
   butonText?: String;
 }
 
-const Card = ({ item, cardButton, OnClick, butonText }: CardProp) => {
- 
+const Card = ({
+  item,
+  deleteButton,
+  OnClickDelete,
+  butonText,
+  OnClick,
+}: CardProp) => {
+  console.log(item['__typename'] === 'Client', item.order);
   return (
     <div>
       <div style={cardStyles} className="generic-item">
         {renderItem(item)}
-        {typeof item.order !== 'string'
+        {item['__typename'] === 'Client' ? (
+          <>
+            {' '}
+            <div className="item-property">
+              <strong>Order: </strong> {item.order}
+            </div>
+            <button onClick={OnClick}>NewOrder</button>
+          </>
+        ) : null}
+        {typeof item.order !== 'string' && item.order !== undefined
           ? item.order.map((it: any, key: number) => {
               return (
                 <div key={key}>
                   <div className="item-property">
-                    <strong>ID: </strong> {it.id}{' '}
+                    <strong>ID: </strong> {it.id}
                   </div>
                   <div className="item-property">
                     <strong>Cantidad: </strong> {it.quantity}
@@ -29,7 +45,9 @@ const Card = ({ item, cardButton, OnClick, butonText }: CardProp) => {
               );
             })
           : null}
-        {cardButton ? <button onClick={OnClick}>{butonText}</button> : null}
+        {deleteButton ? (
+          <button onClick={OnClickDelete}>{butonText}</button>
+        ) : null}
       </div>
     </div>
   );
@@ -53,17 +71,6 @@ const renderItem = (item: any) => {
         );
       });
   }
-
-  <>
-    {item.order.map((it: any, key: number) => {
-      return (
-        <div key={key}>
-          <div className="item-property">ID:{it.id} </div>
-          <div className="item-property">Cantidad{it.quantity}</div>
-        </div>
-      );
-    })}
-  </>;
 };
 
 

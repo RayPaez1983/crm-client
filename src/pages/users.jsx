@@ -67,10 +67,10 @@ const Users = () => {
         return (
           <Card
             item={user}
-            cardButton
+            deleteButton
             butonText="Eliminar"
             key={idx}
-            OnClick={() => deleteCurrentUser(user.id)}
+            OnClickDelete={() => deleteCurrentUser(user.id)}
           />
         );
       })}

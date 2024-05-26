@@ -16,7 +16,11 @@ const Home = () => {
     <div style={cardWrapperStyles}>
       {menuDataState.data && tokenState.token ? (
         menuDataState.data.map((dish: Menu, idx: number) => (
-          <Card item={dish} key={idx} OnClick={() => console.log(dish, idx)} />
+          <Card
+            item={dish}
+            key={idx}
+            OnClickDelete={() => console.log(dish, idx)}
+          />
         ))
       ) : (
         <div>Restaurant App</div>
