@@ -65,14 +65,14 @@ const Home = () => {
     <div style={cardWrapperStyles}>
       {sortedClients.map((client: Client, idx: number) => {
         return (
-          <div key={idx}>
-            <Card
-              OnClick={() => deleteCurrentClient(client.id)}
-              item={client}
-              cardButton
-              butonText="Eliminar"
-            />
-          </div>
+          <Card
+            key={idx}
+            item={client}
+            deleteButton
+            butonText="Eliminar"
+            OnClickDelete={() => deleteCurrentClient(client.id)}
+            OnClick={() => alert(client.id)}
+          />
         );
       })}
     </div>
