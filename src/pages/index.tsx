@@ -1,6 +1,6 @@
-import { cardStyles, cardWrapperStyles } from '@/components/styles';
+import { cardWrapperStyles } from '@/components/styles';
 import { useToken } from '@/context/token.context';
-import { useMenuData } from '@/context/getMenu.context';
+import { useMenuData } from '@/context/menu.context';
 import { Menu } from '../../types/types';
 import Card from '@/components/card';
 

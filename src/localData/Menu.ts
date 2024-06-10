@@ -1,7 +1,7 @@
- export const logOutMenu =[
-    { pathName: `/sign-up`, title: "Registrarse" },
-    { pathName: `/sign-in`, title: "Iniciar Sesion" }
-  ]
+ export const logOutMenu = [
+   { pathName: `/signUp`, title: 'Registrarse' },
+   { pathName: `/signIn`, title: 'Iniciar Sesion' },
+ ];
 
   export const dataMenu = [
      { pathName: `/`, title: 'Home' },

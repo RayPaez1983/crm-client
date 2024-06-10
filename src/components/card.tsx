@@ -8,7 +8,7 @@ interface CardProp {
   OnClickDelete?: () => void;
   OnClick?: () => void;
   butonText?: String;
-  index: Number;
+  index: number;
 }
 
 const Card = ({
@@ -19,10 +19,9 @@ const Card = ({
   OnClick,
   index,
 }: CardProp) => {
-  console.log(item);
   return (
     <div style={cardStyles} className="generic-item">
-      {index}
+      <span>{index + 1}</span>
       {renderItem(item)}
       {item['__typename'] === 'Client' ? (
         <>

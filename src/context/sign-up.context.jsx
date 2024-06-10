@@ -72,7 +72,7 @@ export const NewUserProvider = ({ children }) => {
       });
       if (data) {
         router.push({
-          pathname: `/sign-in`,
+          pathname: `/signIn`,
         });
       }
       dispatch({ type: 'SIGN_UP_SUCCESS', dataSignUp: data.newUser });

@@ -27,11 +27,6 @@ const Users = () => {
   const [deleteUser] = useMutation(DELETE_USER, {
     refetchQueries: [{ query: GET_USERS }],
   });
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    setUsers(data?.getUsers);
-  }, [data]);
 
   const deleteCurrentUser = async (id) => {
     Swal.fire({

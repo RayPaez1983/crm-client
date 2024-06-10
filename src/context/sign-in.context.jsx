@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('token');
     router.push({
-      pathname: `/sign-in`,
+      pathname: `/signIn`,
     });
   };
   return (

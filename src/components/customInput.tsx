@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import {  Field, ErrorMessage } from 'formik';
-import { useAuth } from '../context/sign-in.context';
+import React from 'react';
+import { Field, ErrorMessage } from 'formik';
 import { inputStyles } from './styles';
 
 interface InputProps {
@@ -11,10 +9,14 @@ interface InputProps {
 }
 
 const CustomInput = ({ name, type, placeholder }: InputProps) => {
-
   return (
     <>
-      <Field style={inputStyles} type={type} name={name} placeholder={placeholder} />
+      <Field
+        style={inputStyles}
+        type={type}
+        name={name}
+        placeholder={placeholder}
+      />
       <ErrorMessage name={name} component="div" />
     </>
   );

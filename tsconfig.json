@@ -24,10 +24,10 @@
     "**/*.ts",
     "**/*.tsx",
     "apollo-client.js",
-    "src/pages/sign-in.tsx",
+    "src/pages/signIn.tsx",
     "src/pages/orders.jsx",
     "src/pages/clients.tsx",
-    "src/pages/new-dish.jsx",
+    "src/pages/newDish.jsx",
     "src/pages/newClient.tsx",
     "src/pages/newClient.tsx"
   ],

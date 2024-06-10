@@ -25,7 +25,6 @@ const DELETE_CLIENT = gql`
 `;
 
 const Home = () => {
-  const router = useRouter();
   const { data, loading, error } = useQuery(GET_CLIENTS);
   const [deleteClient] = useMutation(DELETE_CLIENT);
 

@@ -1,28 +1,11 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { Formik, Form } from 'formik';
-import { gql, useMutation } from '@apollo/client';
 import { fromStyles, fromWrapperStyles } from '@/components/styles';
 import CustomInput from '@/components/customInput';
-
-const NEW_DISH = gql`
-  mutation newDish($input: dishInput) {
-    newDish(input: $input) {
-      vegetables
-      protein
-      price
-      inStock
-      id
-      dishName
-      created
-      carbohydrates
-    }
-  }
-`;
+import { useMenuData } from '@/context/plates.context';
 
 const NewDish = () => {
-  const router = useRouter();
-  const [newDish] = useMutation(NEW_DISH);
+  const { createNewPlate } = useMenuData();
   return (
     <div>
       <Formik
@@ -43,27 +26,15 @@ const NewDish = () => {
             dishName,
             carbohydrates,
           } = values;
-          try {
-            const { data } = await newDish({
-              variables: {
-                input: {
-                  vegetables,
-                  protein,
-                  price,
-                  inStock,
-                  dishName,
-                  carbohydrates,
-                },
-              },
-            });
-            if (data) {
-              router.push({
-                pathname: `/`,
-              });
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          const { data } = await createNewPlate(
+            vegetables,
+            protein,
+            price,
+            inStock,
+            dishName,
+            carbohydrates
+          );
+          console.log(data, 'new plate');
         }}>
         {({
           errors,
