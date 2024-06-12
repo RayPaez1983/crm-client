@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import { fromStyles, fromWrapperStyles } from '@/components/styles';
 import CustomInput from '@/components/customInput';
-import { useMenuData } from '@/context/plates.context';
+import { useMenuData } from '@/context/menu.context';
 
 const NewDish = () => {
   const { createNewPlate } = useMenuData();

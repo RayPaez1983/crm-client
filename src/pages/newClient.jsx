@@ -1,26 +1,11 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { Formik, Form } from 'formik';
-import { gql, useMutation } from '@apollo/client';
+import { useClientsData } from '@/context/clients.context';
 import { fromStyles, fromWrapperStyles } from '@/components/styles';
 import CustomInput from '@/components/customInput';
 
-const NEW_CLIENT = gql`
-  mutation Mutation($input: clientInput) {
-    newClient(input: $input) {
-      order
-      phoneNumber
-      name
-      lastname
-      email
-    }
-  }
-`;
-
-
 const NewClient = () => {
-  const router = useRouter();
-  const [newClient] = useMutation(NEW_CLIENT);
+  const { createNewClient } = useClientsData();
   return (
     <div>
       <Formik
@@ -38,26 +23,7 @@ const NewClient = () => {
         }}
         onSubmit={async (values) => {
           const { name, lastname, email, phoneNumber, order } = values;
-          try {
-            const { data } = await newClient({
-              variables: {
-                input: {
-                  name,
-                  lastname,
-                  email,
-                  phoneNumber,
-                  order,
-                },
-              },
-            });
-            if (data) {
-              router.push({
-                pathname: `/clients`,
-              });
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          createNewClient(name, lastname, email, phoneNumber, order);
         }}>
         {({
           errors,
