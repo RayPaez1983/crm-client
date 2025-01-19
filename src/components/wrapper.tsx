@@ -21,14 +21,14 @@ const WrapperComponent: React.FC<ParentProps> = ({ children }) => {
     }
   }, [authState.dataLogin.token]);
 
-  const isSignInPage = router.pathname === '/sign-in';
 
-  return (
-    <>
-      <Menu dataMenu={!isSignInPage && token ? dataMenu : logOutMenu} />
-      <div style={wrapperStyles}>{children}</div>
-    </>
-  );
+
+return (
+  <>
+    <Menu dataMenu={token ? dataMenu : logOutMenu} />
+    <div style={wrapperStyles}>{children}</div>
+  </>
+);
 };
 
 export default WrapperComponent;

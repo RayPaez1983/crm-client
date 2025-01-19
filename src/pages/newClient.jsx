@@ -25,12 +25,7 @@ const NewClient = () => {
           const { name, lastname, email, phoneNumber, order } = values;
           createNewClient(name, lastname, email, phoneNumber, order);
         }}>
-        {({
-          errors,
-          touched,
-
-          /* and other goodies */
-        }) => (
+        {({ errors, touched }) => (
           <div style={fromWrapperStyles}>
             <Form style={fromStyles}>
               <h1>Nuevo Cliente</h1>

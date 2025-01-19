@@ -32,7 +32,9 @@ export const Menu = ({ dataMenu }: MenuProps) => {
           {item.title}
         </div>
       ))}
-      {!isSignInPage && tokenState.token ? <div onClick={signOut}>Cerrar Sesion</div> : null}
+      {!isSignInPage && tokenState.token ? (
+        <div onClick={signOut}>Cerrar Sesion</div>
+      ) : null}
     </div>
   );
 };

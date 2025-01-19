@@ -72,7 +72,7 @@ export const MenuDataProvider = ({ children }) => {
     dishName,
     carbohydrates
   ) => {
-    dispatch({ type: 'LOGIN_REQUEST' });
+    dispatch({ type: 'NEW_MENU_PLATE' });
     try {
       const { data } = await newDish({
         variables: {
@@ -86,7 +86,6 @@ export const MenuDataProvider = ({ children }) => {
           },
         },
       });
-      console.log(data, 'new plate');
       if (data) {
         router.push({
           pathname: `/`,

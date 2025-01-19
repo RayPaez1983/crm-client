@@ -36,7 +36,6 @@ const initialState = {
 };
 
 const orderDataReducer = (state, action) => {
-  console.log(state, action);
   switch (action.type) {
     case 'DATA_ORDER_REQUEST':
       return { ...state, data: action.data?.getOrders };

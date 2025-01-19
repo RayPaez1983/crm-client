@@ -36,11 +36,7 @@ const NewDish = () => {
           );
           console.log(data, 'new plate');
         }}>
-        {({
-          errors,
-          touched,
-          /* and other goodies */
-        }) => (
+        {({ errors, touched }) => (
           <div style={fromWrapperStyles}>
             <Form style={fromStyles}>
               <label htmlFor="dishName">Nombre del plato</label>
