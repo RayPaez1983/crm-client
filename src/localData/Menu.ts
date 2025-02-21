@@ -1,6 +1,8 @@
  export const logOutMenu = [
    { pathName: `/signUp`, title: 'Registrarse' },
    { pathName: `/signIn`, title: 'Iniciar Sesion' },
+   { pathName: `/TodoList`, title: 'Todo List' },
+   { pathName: `/mapsG`, title: 'Google Maps' },
  ];
 
   export const dataMenu = [

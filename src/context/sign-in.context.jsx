@@ -53,14 +53,14 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = async (email, password) => {
     dispatch({ type: 'LOGIN_REQUEST' });
     try {
-      const { data } = await authUser({
-        variables: {
-          input: {
-            email,
-            password,
+        const { data } = await authUser({
+          variables: {
+            input: {
+              email,
+              password,
+            },
           },
-        },
-      });
+        });
       const token = data.authUser.token;
       localStorage.setItem('token', token);
       if (token) {
