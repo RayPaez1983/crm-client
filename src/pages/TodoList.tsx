@@ -56,8 +56,7 @@ const TodoList: React.FC = () => {
   });
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<string>('');
-  const [updatedTask, setUpdatedTask] = useState<string>('');
+  const [task, setTask] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const taskIdRef = useRef<string>('');
@@ -67,12 +66,14 @@ const TodoList: React.FC = () => {
   }, [data, tasks]);
 
   const addTask = async () => {
+    const newTask = {
+      text: task,
+      complete: false,
+    };
+
     const { data } = await newTodo({
       variables: {
-        input: {
-          text: newTask,
-          complete: false,
-        },
+        input: newTask,
       },
     });
     if (data) {
@@ -81,18 +82,19 @@ const TodoList: React.FC = () => {
         setMessage('');
       }, 3000);
     }
-    setNewTask('');
+    setTask('');
   };
 
   const updateTask = async () => {
-    const { data } = await updateTodo({
-      variables: {
-        id: taskIdRef.current,
-        input: {
-          text: updatedTask,
-          complete: false,
-        },
+    const updatedTask = {
+      id: taskIdRef.current,
+      input: {
+        text: task,
+        complete: false,
       },
+    };
+    const { data } = await updateTodo({
+      variables: updatedTask,
     });
     if (data) {
       setIsEditing(false);
@@ -100,7 +102,7 @@ const TodoList: React.FC = () => {
         setMessage('');
       }, 3000);
     }
-    setNewTask('');
+    setTask('');
   };
 
   const deleteTask = async (taskId: number) => {
@@ -120,18 +122,19 @@ const TodoList: React.FC = () => {
       console.log(error);
     }
   };
+
   const completeTask = async (index: number, id: string) => {
     taskIdRef.current = id;
-    console.log(index, tasks[index].id, tasks[index]);
+    const compleTask = {
+      id: tasks[index].id,
+      input: {
+        text: tasks[index].text,
+        complete: true,
+      },
+    };
     try {
       const { data } = await updateTodo({
-        variables: {
-          id: tasks[index].id,
-          input: {
-            text: tasks[index].text,
-            complete: true,
-          },
-        },
+        variables: compleTask,
       });
       if (data) {
         console.log(data);
@@ -139,23 +142,27 @@ const TodoList: React.FC = () => {
           setMessage('');
         }, 3000);
       }
-      setNewTask('');
+      setTask('');
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTask(event.target.value);
+    setTask(event.target.value);
   };
 
   const editTask = (index: number, id: string) => {
-    console.log('ID recibido:', id);
-    setUpdatedTask(tasks[index].text);
+    setTask(tasks[index].text);
     setIsEditing(true);
     taskIdRef.current = id;
-    console.log('taskIdRef.current:', taskIdRef.current);
   };
+
+  const onCancelClick = () => {
+    setIsEditing(false);
+    setTask('');
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -166,7 +173,7 @@ const TodoList: React.FC = () => {
         <input
           type="text"
           placeholder="Type something here"
-          value={newTask}
+          value={task}
           onChange={handleInputChange}
           style={{
             padding: '10px',
@@ -191,7 +198,7 @@ const TodoList: React.FC = () => {
               Update Task
             </button>
             <button
-              onClick={() => setIsEditing(false)}
+              onClick={onCancelClick}
               style={{
                 padding: '10px',
                 fontSize: '16px',
@@ -231,6 +238,7 @@ const TodoList: React.FC = () => {
                 alignItems: 'center',
                 marginBottom: '10px',
                 padding: '10px',
+                gap: '10px',
                 backgroundColor: '#f9f9f9',
                 border: '1px solid #ddd',
                 borderRadius: '5px',
@@ -257,33 +265,33 @@ const TodoList: React.FC = () => {
                 }}>
                 Delete
               </button>
+              <button
+                onClick={() => editTask(index, task.id)}
+                style={{
+                  padding: '5px 10px',
+                  fontSize: '14px',
+                  backgroundColor: '#dc3545',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                }}>
+                Edit
+              </button>
+              <button
+                onClick={() => completeTask(index, task.id)}
+                style={{
+                  padding: '5px 10px',
+                  fontSize: '14px',
+                  backgroundColor: '#dc3545',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                }}>
+                Complete task
+              </button>
             </li>
-            <button
-              onClick={() => editTask(index, task.id)}
-              style={{
-                padding: '5px 10px',
-                fontSize: '14px',
-                backgroundColor: '#dc3545',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}>
-              Edit
-            </button>
-            <button
-              onClick={() => completeTask(index, task.id)}
-              style={{
-                padding: '5px 10px',
-                fontSize: '14px',
-                backgroundColor: '#dc3545',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}>
-              Complete task
-            </button>
           </>
         ))}
       </ul>
