@@ -8,25 +8,28 @@ import { OrderDataProvider } from '@/context/orders.context';
 import { ClientsDataProvider } from '@/context/clients.context';
 import WrapperComponent from "@/components/wrapper";
 import '../styles/global.css';
+import { ToDoProvider } from '@/context/toDo.context';
 
 const MyApp = ({ Component, pageProps }: any) => {
   return (
     <ApolloProvider client={client}>
-      <AuthProvider>
-        <NewUserProvider>
-          <TokenProvider>
-            <MenuDataProvider>
-              <ClientsDataProvider>
-                <OrderDataProvider>
-                  <WrapperComponent>
-                    <Component {...pageProps} />
-                  </WrapperComponent>
-                </OrderDataProvider>
-              </ClientsDataProvider>
-            </MenuDataProvider>
-          </TokenProvider>
-        </NewUserProvider>
-      </AuthProvider>
+      <ToDoProvider>
+        <AuthProvider>
+          <NewUserProvider>
+            <TokenProvider>
+              <MenuDataProvider>
+                <ClientsDataProvider>
+                  <OrderDataProvider>
+                    <WrapperComponent>
+                      <Component {...pageProps} />
+                    </WrapperComponent>
+                  </OrderDataProvider>
+                </ClientsDataProvider>
+              </MenuDataProvider>
+            </TokenProvider>
+          </NewUserProvider>
+        </AuthProvider>
+      </ToDoProvider>
     </ApolloProvider>
   );
 };

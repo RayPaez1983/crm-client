@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, gql } from '@apollo/client';
+import { useToDoContext } from './../context/toDo.context';
 
 const GET_ORDERS_QUERY = gql`
   query getTodo {
@@ -55,35 +56,16 @@ const TodoList: React.FC = () => {
     refetchQueries: [{ query: GET_ORDERS_QUERY }],
   });
 
+  const { toDoDataState, deleteToDoOnClick, handleInputChange, createToDo } =
+    useToDoContext();
+
+  console.log(toDoDataState);
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [task, setTask] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const taskIdRef = useRef<string>('');
-
-  useEffect(() => {
-    data ? setTasks(data.getTodos) : null;
-  }, [data, tasks]);
-
-  const addTask = async () => {
-    const newTask = {
-      text: task,
-      complete: false,
-    };
-
-    const { data } = await newTodo({
-      variables: {
-        input: newTask,
-      },
-    });
-    if (data) {
-      setMessage(`The new todo ${data.newTodo.id} was created sucessfull`);
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
-    }
-    setTask('');
-  };
 
   const updateTask = async () => {
     const updatedTask = {
@@ -103,24 +85,6 @@ const TodoList: React.FC = () => {
       }, 3000);
     }
     setTask('');
-  };
-
-  const deleteTask = async (taskId: number) => {
-    try {
-      const { data } = await deleteTodo({
-        variables: {
-          deleteToDoId: taskId,
-        },
-      });
-      if (data) {
-        setMessage(`The todo ${data.deleteTodo}`);
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const completeTask = async (index: number, id: string) => {
@@ -148,10 +112,6 @@ const TodoList: React.FC = () => {
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTask(event.target.value);
-  };
-
   const editTask = (index: number, id: string) => {
     setTask(tasks[index].text);
     setIsEditing(true);
@@ -173,7 +133,7 @@ const TodoList: React.FC = () => {
         <input
           type="text"
           placeholder="Type something here"
-          value={task}
+          value={toDoDataState.task}
           onChange={handleInputChange}
           style={{
             padding: '10px',
@@ -213,7 +173,7 @@ const TodoList: React.FC = () => {
           </>
         ) : (
           <button
-            onClick={addTask}
+            onClick={() => createToDo(toDoDataState.task)}
             style={{
               padding: '10px',
               fontSize: '16px',
@@ -228,71 +188,69 @@ const TodoList: React.FC = () => {
         )}
       </div>
       <ul style={{ listStyle: 'none', padding: 0 }}>
-        {tasks.map((task: any, index) => (
-          <>
-            <li
-              key={index}
+        {toDoDataState.data.getTodos?.map((task: any, index: number) => (
+          <li
+            key={index}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '10px',
+              padding: '10px',
+              gap: '10px',
+              backgroundColor: '#f9f9f9',
+              border: '1px solid #ddd',
+              borderRadius: '5px',
+            }}>
+            <span
               style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '10px',
-                padding: '10px',
-                gap: '10px',
-                backgroundColor: '#f9f9f9',
-                border: '1px solid #ddd',
-                borderRadius: '5px',
+                textDecoration: task.complete ? 'line-through' : 'none',
+                cursor: 'pointer',
+                flex: 1,
               }}>
-              <span
-                style={{
-                  textDecoration: task.complete ? 'line-through' : 'none',
-                  cursor: 'pointer',
-                  flex: 1,
-                }}>
-                {task.text}
-              </span>
+              {task.text}
+            </span>
 
-              <button
-                onClick={() => deleteTask(task.id)}
-                style={{
-                  padding: '5px 10px',
-                  fontSize: '14px',
-                  backgroundColor: '#dc3545',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}>
-                Delete
-              </button>
-              <button
-                onClick={() => editTask(index, task.id)}
-                style={{
-                  padding: '5px 10px',
-                  fontSize: '14px',
-                  backgroundColor: '#dc3545',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}>
-                Edit
-              </button>
-              <button
-                onClick={() => completeTask(index, task.id)}
-                style={{
-                  padding: '5px 10px',
-                  fontSize: '14px',
-                  backgroundColor: '#dc3545',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}>
-                Complete task
-              </button>
-            </li>
-          </>
+            <button
+              onClick={() => deleteToDoOnClick(task.id)}
+              style={{
+                padding: '5px 10px',
+                fontSize: '14px',
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}>
+              Delete
+            </button>
+            <button
+              onClick={() => editTask(index, task.id)}
+              style={{
+                padding: '5px 10px',
+                fontSize: '14px',
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}>
+              Edit
+            </button>
+            <button
+              onClick={() => completeTask(index, task.id)}
+              style={{
+                padding: '5px 10px',
+                fontSize: '14px',
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}>
+              Complete task
+            </button>
+          </li>
         ))}
       </ul>
       <span>{message}</span>
