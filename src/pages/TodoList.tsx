@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery, gql } from '@apollo/client';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client';
 import { useToDoContext } from './../context/toDo.context';
 
 const GET_ORDERS_QUERY = gql`
@@ -12,116 +12,21 @@ const GET_ORDERS_QUERY = gql`
   }
 `;
 
-const ADD_NEW_TODO_MUTATION = gql`
-  mutation newTodo($input: TodoInput) {
-    newTodo(input: $input) {
-      id
-      text
-      complete
-    }
-  }
-`;
-const UPDATE_TODO_MUTATION = gql`
-  mutation updateTodo($id: ID!, $input: TodoInput) {
-    updateTodo(id: $id, input: $input) {
-      id
-      text
-      complete
-    }
-  }
-`;
-
-const DELETE_TODO = gql`
-  mutation deleteTodo($deleteToDoId: ID!) {
-    deleteTodo(id: $deleteToDoId)
-  }
-`;
-
-interface Task {
-  id?: number;
-  text: string;
-  complete: boolean;
-}
-
 const TodoList: React.FC = () => {
   const { loading, error, data } = useQuery(GET_ORDERS_QUERY);
-  const [newTodo] = useMutation(ADD_NEW_TODO_MUTATION, {
-    refetchQueries: [{ query: GET_ORDERS_QUERY }],
-  });
 
-  const [updateTodo] = useMutation(UPDATE_TODO_MUTATION, {
-    refetchQueries: [{ query: GET_ORDERS_QUERY }],
-  });
-  const [deleteTodo] = useMutation(DELETE_TODO, {
-    refetchQueries: [{ query: GET_ORDERS_QUERY }],
-  });
-
-  const { toDoDataState, deleteToDoOnClick, handleInputChange, createToDo } =
-    useToDoContext();
+  const {
+    toDoDataState,
+    deleteToDoOnClick,
+    handleInputChange,
+    createToDo,
+    editTask,
+    updateTask,
+    completeTask,
+    onCancelClick,
+  } = useToDoContext();
 
   console.log(toDoDataState);
-
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [task, setTask] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const taskIdRef = useRef<string>('');
-
-  const updateTask = async () => {
-    const updatedTask = {
-      id: taskIdRef.current,
-      input: {
-        text: task,
-        complete: false,
-      },
-    };
-    const { data } = await updateTodo({
-      variables: updatedTask,
-    });
-    if (data) {
-      setIsEditing(false);
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
-    }
-    setTask('');
-  };
-
-  const completeTask = async (index: number, id: string) => {
-    taskIdRef.current = id;
-    const compleTask = {
-      id: tasks[index].id,
-      input: {
-        text: tasks[index].text,
-        complete: true,
-      },
-    };
-    try {
-      const { data } = await updateTodo({
-        variables: compleTask,
-      });
-      if (data) {
-        console.log(data);
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
-      }
-      setTask('');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const editTask = (index: number, id: string) => {
-    setTask(tasks[index].text);
-    setIsEditing(true);
-    taskIdRef.current = id;
-  };
-
-  const onCancelClick = () => {
-    setIsEditing(false);
-    setTask('');
-  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -142,10 +47,12 @@ const TodoList: React.FC = () => {
             marginRight: '10px',
           }}
         />
-        {isEditing ? (
+        {toDoDataState.isEditing ? (
           <>
             <button
-              onClick={updateTask}
+              onClick={() =>
+                updateTask(toDoDataState.task, toDoDataState.taskId)
+              }
               style={{
                 padding: '10px',
                 fontSize: '16px',
@@ -253,7 +160,6 @@ const TodoList: React.FC = () => {
           </li>
         ))}
       </ul>
-      <span>{message}</span>
     </div>
   );
 };

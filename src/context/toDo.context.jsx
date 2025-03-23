@@ -48,33 +48,44 @@ const initialState = {
   data: [],
   task: '',
   message: '',
+  taskId: '',
   isEditing: false,
   loading: true,
   newToDo: {},
 };
 
 const toDoDataReducer = (state, action) => {
-  console.log(action);
+  console.log(action.payload);
   switch (action.type) {
     case 'TO_DO_REQUEST':
       return {
         ...state,
-        data: action.data || [],
+        data: action.payload || [],
       };
     case 'TO_DO_LOADING':
       return {
         ...state,
-        loading: action.loading,
+        loading: action.payload,
       };
     case 'NEW_TODO':
       return {
         ...state,
         newToDo: action.data || {},
       };
-    case 'NEW_TASK':
+    case 'SET_TASK_TEXT':
       return {
         ...state,
         task: action.payload,
+      };
+    case 'IS_EDITING_TEXT':
+      return {
+        ...state,
+        isEditing: action.payload,
+      };
+    case 'SET_TASK_ID':
+      return {
+        ...state,
+        taskId: action.payload,
       };
     default:
       return state;
@@ -82,7 +93,6 @@ const toDoDataReducer = (state, action) => {
 };
 
 export const ToDoProvider = ({ children }) => {
-  const router = useRouter();
   const { loading, error, data } = useQuery(GET_ORDERS_QUERY);
   const [newTodo] = useMutation(ADD_NEW_TODO_MUTATION, {
     refetchQueries: [{ query: GET_ORDERS_QUERY }],
@@ -101,18 +111,33 @@ export const ToDoProvider = ({ children }) => {
     console.log(data);
     dispatch({
       type: 'TO_DO_REQUEST',
-      data,
+      payload: data,
     });
     dispatch({
       type: 'TO_DO_LOADING',
-      loading,
+      payload: loading,
     });
   }, [data, loading]);
 
   const handleInputChange = (event) => {
     dispatch({
-      type: 'NEW_TASK',
+      type: 'SET_TASK_TEXT',
       payload: event.target.value,
+    });
+  };
+
+  const editTask = (index, id) => {
+    dispatch({
+      type: 'SET_TASK_TEXT',
+      payload: toDoDataState.data.getTodos?.[index].text,
+    });
+    dispatch({
+      type: 'IS_EDITING_TEXT',
+      payload: true,
+    });
+    dispatch({
+      type: 'SET_TASK_ID',
+      payload: id,
     });
   };
 
@@ -130,8 +155,35 @@ export const ToDoProvider = ({ children }) => {
     if (data) {
       Swal.fire('To Do Created!', data, 'success');
       dispatch({
-        type: 'NEW_TASK',
+        type: 'SET_TASK_TEXT',
         payload: '',
+      });
+    }
+  };
+  const updateTask = async (text, taskId) => {
+    const updatedTask = {
+      id: taskId,
+      input: {
+        text,
+        complete: false,
+      },
+    };
+    const { data } = await updateTodo({
+      variables: updatedTask,
+    });
+    if (data) {
+      Swal.fire(
+        'To Do Updated Successfully!',
+        `the task ${data.updateTodo.text}`,
+        'success'
+      );
+      dispatch({
+        type: 'SET_TASK_TEXT',
+        payload: '',
+      });
+      dispatch({
+        type: 'IS_EDITING_TEXT',
+        payload: false,
       });
     }
   };
@@ -162,6 +214,37 @@ export const ToDoProvider = ({ children }) => {
     });
   };
 
+  const completeTask = async (index, taskId) => {
+    const compleTask = {
+      id: taskId,
+      input: {
+        text: toDoDataState.data.getTodos?.[index].text,
+        complete: true,
+      },
+    };
+    try {
+      const { data } = await updateTodo({
+        variables: compleTask,
+      });
+      if (data) {
+        Swal.fire('This task is Completed', data.updateTodo.text, 'success');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onCancelClick = () => {
+    dispatch({
+      type: 'SET_TASK_TEXT',
+      payload: '',
+    });
+    dispatch({
+      type: 'IS_EDITING_TEXT',
+      payload: false,
+    });
+  };
+
   return (
     <ToDoContext.Provider
       value={{
@@ -169,6 +252,10 @@ export const ToDoProvider = ({ children }) => {
         createToDo,
         deleteToDoOnClick,
         handleInputChange,
+        editTask,
+        updateTask,
+        completeTask,
+        onCancelClick,
       }}>
       {children}
     </ToDoContext.Provider>
