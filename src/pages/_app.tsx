@@ -6,6 +6,7 @@ import {TokenProvider} from "../context/token.context"
 import { MenuDataProvider } from '@/context/menu.context';
 import { OrderDataProvider } from '@/context/orders.context';
 import { ClientsDataProvider } from '@/context/clients.context';
+import { UsersDataProvider } from '@/context/users.context';
 import WrapperComponent from "@/components/wrapper";
 import '../styles/global.css';
 import { ToDoProvider } from '@/context/toDo.context';
@@ -19,11 +20,13 @@ const MyApp = ({ Component, pageProps }: any) => {
             <TokenProvider>
               <MenuDataProvider>
                 <ClientsDataProvider>
-                  <OrderDataProvider>
-                    <WrapperComponent>
-                      <Component {...pageProps} />
-                    </WrapperComponent>
-                  </OrderDataProvider>
+                  <UsersDataProvider>
+                    <OrderDataProvider>
+                      <WrapperComponent>
+                        <Component {...pageProps} />
+                      </WrapperComponent>
+                    </OrderDataProvider>
+                  </UsersDataProvider>
                 </ClientsDataProvider>
               </MenuDataProvider>
             </TokenProvider>
