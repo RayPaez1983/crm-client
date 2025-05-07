@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
-import { useRouter } from 'next/router';
+
 
 const GET_ORDERS_QUERY = gql`
   query getTodo {
@@ -51,11 +51,12 @@ const initialState = {
   taskId: '',
   isEditing: false,
   loading: true,
+  error: {},
   newToDo: {},
 };
 
 const toDoDataReducer = (state, action) => {
-  console.log(action.payload);
+  console.log(action);
   switch (action.type) {
     case 'TO_DO_REQUEST':
       return {
@@ -67,10 +68,15 @@ const toDoDataReducer = (state, action) => {
         ...state,
         loading: action.payload,
       };
+    case 'TO_DO_ERROR':
+      return {
+        ...state,
+        error: action.payload,
+      };
     case 'NEW_TODO':
       return {
         ...state,
-        newToDo: action.data || {},
+        newToDo: action.payload || {},
       };
     case 'SET_TASK_TEXT':
       return {
@@ -108,7 +114,7 @@ export const ToDoProvider = ({ children }) => {
   const [toDoDataState, dispatch] = useReducer(toDoDataReducer, initialState);
 
   useEffect(() => {
-    console.log(data);
+    console.log(loading, error);
     dispatch({
       type: 'TO_DO_REQUEST',
       payload: data,
@@ -117,7 +123,11 @@ export const ToDoProvider = ({ children }) => {
       type: 'TO_DO_LOADING',
       payload: loading,
     });
-  }, [data, loading]);
+    dispatch({
+      type: 'TO_DO_ERROR',
+      payload: error,
+    });
+  }, [data, error, loading]);
 
   const handleInputChange = (event) => {
     dispatch({

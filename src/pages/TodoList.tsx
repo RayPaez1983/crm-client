@@ -1,20 +1,7 @@
 import React from 'react';
-import { useQuery, gql } from '@apollo/client';
 import { useToDoContext } from './../context/toDo.context';
 
-const GET_ORDERS_QUERY = gql`
-  query getTodo {
-    getTodos {
-      id
-      text
-      complete
-    }
-  }
-`;
-
 const TodoList: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_ORDERS_QUERY);
-
   const {
     toDoDataState,
     deleteToDoOnClick,
@@ -26,8 +13,8 @@ const TodoList: React.FC = () => {
     onCancelClick,
   } = useToDoContext();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (toDoDataState.loading) return <p>Loading...</p>;
+  if (toDoDataState.error) return <p>Error: {toDoDataState.error.message}</p>;
 
   return (
     <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>

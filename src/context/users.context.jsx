@@ -33,7 +33,6 @@ const initialState = {
 };
 
 const clientsDataReducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
     case 'DATA_USERS_REQUEST':
       return {
